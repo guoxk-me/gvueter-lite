@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.pnpm-store
 .DS_Store
 dist
 dist-ssr
@@ -35,5 +36,11 @@ coverage
 # Vitest
 __screenshots__/
 
+# Vite
+*.timestamp-*-*.mjs
+
 test-results/
 playwright-report/
+!.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json

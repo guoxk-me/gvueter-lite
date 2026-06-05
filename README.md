@@ -65,3 +65,9 @@ pnpm test:e2e tests/example.spec.ts
 # Runs the tests in debug mode
 pnpm test:e2e --debug
 ```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+pnpm lint
+```

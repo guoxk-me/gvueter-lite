@@ -1,0 +1,13 @@
+app:
+  title: You did it!
+  docsVisit: Visit
+  docsSuffix: to read the documentation
+colorMode:
+  dark: Dark
+  light: Light
+  switchTo: Switch to {mode} mode
+language:
+  label: Language
+  english: English
+  chinese: 中文
+  switchTo: Switch to {language}

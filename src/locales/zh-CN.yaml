@@ -1,0 +1,13 @@
+app:
+  title: 完成了！
+  docsVisit: 访问
+  docsSuffix: 阅读文档
+colorMode:
+  dark: 深色
+  light: 浅色
+  switchTo: 切换到{mode}模式
+language:
+  label: 语言
+  english: English
+  chinese: 中文
+  switchTo: 切换到{language}

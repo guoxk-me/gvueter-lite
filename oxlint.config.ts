@@ -123,10 +123,5 @@ export default defineConfig({
       name: 'vite-plus',
       specifier: 'vite-plus/oxlint-plugin',
     },
-    {
-      // AI modified: load pnpm workspace rules through Oxlint JS plugin support.
-      name: 'pnpm',
-      specifier: 'eslint-plugin-pnpm',
-    },
   ],
 })

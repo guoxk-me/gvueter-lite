@@ -1,17 +1,15 @@
-import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { ViteSSG } from 'vite-ssg'
 
 import App from './App.vue'
 import { i18n } from './i18n'
-import router from './router'
+import { routes } from './router'
 // AI modified: load Tailwind CSS once for the Vue application.
 import './style.css'
 
-const app = createApp(App)
-
-app.use(createPinia())
-app.use(router)
-// AI modified: install Vue I18n globally for localized app messages.
-app.use(i18n)
-
-app.mount('#app')
+// AI modified: ViteSSG creates app instances for client hydration and static rendering.
+export const createApp = ViteSSG(App, { routes, base: import.meta.env.BASE_URL }, ({ app }) => {
+  app.use(createPinia())
+  // AI modified: install Vue I18n globally for localized app messages.
+  app.use(i18n)
+})

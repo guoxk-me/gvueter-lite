@@ -11,11 +11,21 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import vue from '@vitejs/plugin-vue'
+import generateSitemap from 'vite-ssg-sitemap'
 import Inspect from 'vite-plugin-inspect'
+import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 import oxfmtConfig from './oxfmt.config'
 import oxlintConfig from './oxlint.config'
+import type { ViteSSGOptions } from 'vite-ssg'
+
+declare module 'vite-plus' {
+  interface UserConfig {
+    // AI modified: vite-ssg augments Vite types, so Vite+ needs the same option.
+    ssgOptions?: ViteSSGOptions
+  }
+}
 
 interface LocalhostCertificates {
   key: Buffer
@@ -30,6 +40,7 @@ const require = createRequire(import.meta.url)
 
 function inlineCriticalCssPlugin(): Plugin {
   let resolvedConfig: ResolvedConfig
+  let isSsrBuild = false
 
   return {
     name: 'gvueter-lite:beasties',
@@ -37,8 +48,14 @@ function inlineCriticalCssPlugin(): Plugin {
     enforce: 'post',
     configResolved(config) {
       resolvedConfig = config
+      isSsrBuild = Boolean(config.build.ssr)
     },
     async closeBundle() {
+      // AI modified: vite-ssg server builds do not emit an index.html for Beasties.
+      if (isSsrBuild) {
+        return
+      }
+
       const outputDirectory = resolve(resolvedConfig.root, resolvedConfig.build.outDir)
       const htmlFile = resolve(outputDirectory, 'index.html')
       const html = await readFile(htmlFile, 'utf8')
@@ -75,6 +92,15 @@ export default defineConfig({
   lint: oxlintConfig,
   server: {
     https: localHttpsCertificates,
+  },
+  ssgOptions: {
+    // AI modified: generate search-engine files after vite-ssg writes static HTML.
+    onFinished() {
+      generateSitemap({
+        hostname: process.env.VITE_SITE_URL ?? 'http://localhost/',
+        readable: true,
+      })
+    },
   },
   // AI modified: register project-wide Vite plugins for imports, components, layouts, i18n, inspection, and critical CSS.
   plugins: [
@@ -114,6 +140,25 @@ export default defineConfig({
     Inspect({
       dev: true,
       build: process.env.VITE_INSPECT_BUILD === 'true',
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico'],
+      manifest: {
+        name: 'gvueter-lite',
+        short_name: 'gvueter-lite',
+        description: 'gvueter-lite',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        start_url: '/',
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+      },
+      devOptions: {
+        enabled: true,
+      },
     }),
     inlineCriticalCssPlugin(),
   ],

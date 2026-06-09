@@ -1,6 +1,6 @@
-import { beforeEach, describe, it, expect, vi } from 'vite-plus/test'
-
 import { mount } from '@vue/test-utils'
+
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { nextTick } from 'vue'
 import App from '../App.vue'
 import { i18n } from '../i18n'

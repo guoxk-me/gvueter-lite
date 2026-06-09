@@ -3,27 +3,25 @@
   "explorer.fileNesting.patterns": {
     "tsconfig.json": "tsconfig.*.json, env.d.ts, typed-router.d.ts",
     "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
-    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .oxlint*, oxlint*, .oxfmt*, .prettier*, prettier*, .editorconfig"
+    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.fixAll.oxc": "explicit"
+    "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "npm.scriptRunner": "vp",
   "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
-  "oxc.fmt.configPath": "./vite.config.ts",
   "editor.formatOnSaveMode": "file"
 }

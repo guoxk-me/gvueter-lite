@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { SupportedLocale } from '@/i18n'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { isSupportedLocale, languageStorageKey } from '@/i18n'
-import type { SupportedLocale } from '@/i18n'
 
 interface SupportedLanguage {
   locale: SupportedLocale

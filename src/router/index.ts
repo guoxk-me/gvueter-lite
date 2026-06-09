@@ -1,6 +1,6 @@
-import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
-import { setupLayouts } from 'virtual:generated-layouts'
 import type { RouteRecordRaw } from 'vue-router'
+import { setupLayouts } from 'virtual:generated-layouts'
+import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 
 // AI modified: expose shared routes so ViteSSG can create its own router per render.
 export const routes: RouteRecordRaw[] = setupLayouts([])

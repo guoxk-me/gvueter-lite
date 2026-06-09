@@ -1,8 +1,12 @@
 {
   "name": "gvueter-lite",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
+  "packageManager": "pnpm@11.5.2",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "scripts": {
     "dev": "vp dev",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -12,11 +16,8 @@
     "test:e2e": "playwright test",
     "build-only": "vite-ssg build",
     "type-check": "vue-tsc --build",
-    "lint": "run-s lint:*",
-    "lint:oxlint": "vp lint . --fix",
-    "lint:eslint": "vp lint . --fix",
-    "format": "vp fmt src/",
-    "prepare": "vp config"
+    "lint": "eslint . --fix",
+    "format": "eslint src --fix"
   },
   "dependencies": {
     "@unhead/vue": "catalog:",
@@ -28,6 +29,7 @@
     "vue-router": "catalog:"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "catalog:",
     "@iconify-json/lucide": "catalog:",
     "@iconify/tailwind4": "catalog:",
     "@intlify/unplugin-vue-i18n": "catalog:",
@@ -40,13 +42,12 @@
     "@vue/test-utils": "catalog:",
     "@vue/tsconfig": "catalog:",
     "beasties": "catalog:",
+    "eslint": "catalog:",
     "eslint-plugin-playwright": "catalog:",
     "https-localhost": "catalog:",
     "jiti": "catalog:",
     "jsdom": "catalog:",
     "npm-run-all2": "catalog:",
-    "oxfmt": "catalog:",
-    "oxlint": "catalog:",
     "tailwindcss": "catalog:",
     "taze": "catalog:",
     "typescript": "catalog:",
@@ -63,9 +64,5 @@
     "vite-ssg-sitemap": "catalog:",
     "vitest": "catalog:",
     "vue-tsc": "catalog:"
-  },
-  "engines": {
-    "node": "^20.19.0 || >=22.12.0"
-  },
-  "packageManager": "pnpm@11.5.2"
+  }
 }

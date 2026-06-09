@@ -1,24 +1,23 @@
-import { readFile, writeFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
-import { createRequire } from 'node:module'
-import { fileURLToPath, URL } from 'node:url'
-
-import Beasties from 'beasties'
-import { defineConfig } from 'vite-plus'
+import type { Buffer } from 'node:buffer'
 import type { Plugin, ResolvedConfig } from 'vite-plus'
-import tailwindcss from '@tailwindcss/vite'
+import type { ViteSSGOptions } from 'vite-ssg'
+import { readFile, writeFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
+import { resolve } from 'node:path'
+import process from 'node:process'
+import { fileURLToPath, URL } from 'node:url'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import Beasties from 'beasties'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import vue from '@vitejs/plugin-vue'
-import generateSitemap from 'vite-ssg-sitemap'
 import Inspect from 'vite-plugin-inspect'
 import { VitePWA } from 'vite-plugin-pwa'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
-import oxfmtConfig from './oxfmt.config'
-import oxlintConfig from './oxlint.config'
-import type { ViteSSGOptions } from 'vite-ssg'
+import { defineConfig } from 'vite-plus'
+import generateSitemap from 'vite-ssg-sitemap'
 
 declare module 'vite-plus' {
   interface UserConfig {
@@ -85,11 +84,9 @@ const localHttpsCertificates = await getLocalHttpsCertificates()
 // https://vite.dev/config/
 export default defineConfig({
   staged: {
-    '*': 'vp check --fix',
+    // AI modified: run staged checks through ESLint autofix.
+    '*': 'eslint --fix',
   },
-  // AI modified: keep Oxfmt and Oxlint config in dedicated modules while Vite+ reads them here.
-  fmt: oxfmtConfig,
-  lint: oxlintConfig,
   server: {
     https: localHttpsCertificates,
   },

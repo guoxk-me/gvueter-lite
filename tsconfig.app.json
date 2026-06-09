@@ -1,11 +1,10 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
-  "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
-    // Extra safety for array and object lookups, but may have false positives.
-    "noUncheckedIndexedAccess": true,
 
+    // `vue-tsc --build` produces a .tsbuildinfo file for incremental type-checking.
+    // Specified here to keep it out of the root directory.
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     // Path mapping for cleaner imports.
     "paths": {
       "@/*": ["./src/*"]
@@ -14,8 +13,9 @@
     // Plugin-generated virtual modules used by app code.
     "types": ["@intlify/unplugin-vue-i18n/messages", "vite-plugin-vue-layouts/client"],
 
-    // `vue-tsc --build` produces a .tsbuildinfo file for incremental type-checking.
-    // Specified here to keep it out of the root directory.
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo"
-  }
+    // Extra safety for array and object lookups, but may have false positives.
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "exclude": ["src/**/__tests__/*"]
 }

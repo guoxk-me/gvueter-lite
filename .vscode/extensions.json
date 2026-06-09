@@ -5,7 +5,6 @@
     "ms-playwright.playwright",
     "dbaeumer.vscode-eslint",
     "EditorConfig.EditorConfig",
-    "oxc.oxc-vscode",
     "VoidZero.vite-plus-extension-pack"
   ]
 }

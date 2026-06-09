@@ -20,9 +20,7 @@ const { t } = useI18n()
       </div>
       <p class="text-muted-foreground">
         {{ t('app.docsVisit') }}
-        <a class="text-primary underline" href="https://vuejs.org/" target="_blank" rel="noopener"
-          >vuejs.org</a
-        >
+        <a class="text-primary underline" href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a>
         {{ t('app.docsSuffix') }}
       </p>
     </div>

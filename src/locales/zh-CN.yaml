@@ -4,7 +4,9 @@ app:
   docsSuffix: 阅读文档
 colorMode:
   dark: 深色
+  label: 颜色模式
   light: 浅色
+  system: 跟随系统
   switchTo: 切换到{mode}模式
 language:
   label: 语言

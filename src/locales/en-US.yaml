@@ -4,7 +4,9 @@ app:
   docsSuffix: to read the documentation
 colorMode:
   dark: Dark
+  label: Color mode
   light: Light
+  system: System
   switchTo: Switch to {mode} mode
 language:
   label: Language

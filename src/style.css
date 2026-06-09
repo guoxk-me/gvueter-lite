@@ -60,3 +60,9 @@
     color: var(--foreground);
   }
 }
+
+/* Smooth crossfade when switching color mode via View Transition API */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+}

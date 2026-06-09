@@ -9,14 +9,23 @@ interface SupportedLanguage {
   labelKey: string
 }
 
+const fallbackLanguage: SupportedLanguage = { locale: 'en-US', labelKey: 'language.english' }
 const supportedLanguages: SupportedLanguage[] = [
-  { locale: 'en-US', labelKey: 'language.english' },
+  fallbackLanguage,
   { locale: 'zh-CN', labelKey: 'language.chinese' },
 ]
 
 const { locale, t } = useI18n({ useScope: 'global' })
 
 const selectedLanguage = computed(() => (isSupportedLocale(locale.value) ? locale.value : 'en-US'))
+// AI modified: icon-only language control cycles to the other supported locale.
+const nextLanguage = computed(() => {
+  const selectedLanguageIndex = supportedLanguages.findIndex(
+    language => language.locale === selectedLanguage.value,
+  )
+
+  return supportedLanguages[(selectedLanguageIndex + 1) % supportedLanguages.length] ?? fallbackLanguage
+})
 
 function selectLanguage(nextLocale: SupportedLocale) {
   if (selectedLanguage.value === nextLocale) {
@@ -30,28 +39,14 @@ function selectLanguage(nextLocale: SupportedLocale) {
 </script>
 
 <template>
-  <div
-    class="inline-flex rounded border border-secondary bg-background p-1"
-    :aria-label="t('language.label')"
-    role="group"
+  <button
+    class="inline-flex size-10 items-center justify-center rounded border border-secondary bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+    type="button"
+    :aria-label="t('language.switchTo', { language: t(nextLanguage.labelKey) })"
     data-test="language-switch"
+    :data-test-next-language="`language-switch-${nextLanguage.locale}`"
+    @click="selectLanguage(nextLanguage.locale)"
   >
-    <button
-      v-for="language in supportedLanguages"
-      :key="language.locale"
-      class="min-w-14 rounded px-3 py-1.5 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-      :class="
-        selectedLanguage === language.locale
-          ? 'bg-primary text-primary-foreground'
-          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-      "
-      type="button"
-      :aria-pressed="selectedLanguage === language.locale"
-      :aria-label="t('language.switchTo', { language: t(language.labelKey) })"
-      :data-test="`language-switch-${language.locale}`"
-      @click="selectLanguage(language.locale)"
-    >
-      {{ t(language.labelKey) }}
-    </button>
-  </div>
+    <span class="icon-[lucide--languages] size-5" aria-hidden="true" />
+  </button>
 </template>

@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, shallowRef } from 'vue'
 
 export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
+  // AI modified: use shallowRef for primitive store state.
+  const count = shallowRef(0)
   const doubleCount = computed(() => count.value * 2)
   function increment() {
     count.value++

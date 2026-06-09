@@ -105,7 +105,7 @@ export default defineConfig({
     vue(),
     VueI18nPlugin({
       // AI modified: restrict i18n resources to the dedicated YAML locale directory.
-      include: [fileURLToPath(new URL('./src/locales/**/*.{yaml,yml}', import.meta.url))],
+      include: [fileURLToPath(new URL('./locales/**/*.{yaml,yml}', import.meta.url))],
       compositionOnly: true,
       runtimeOnly: true,
       strictMessage: true,

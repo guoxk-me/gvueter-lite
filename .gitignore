@@ -19,7 +19,9 @@ coverage
 
 # Editor directories and files
 .vscode/*
+# AI modified: keep shared VS Code settings tracked while ignoring local workspace files.
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea
 *.suo
 *.ntvs*
@@ -28,8 +30,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-
-.eslintcache
 
 # Cypress
 /cypress/videos/
@@ -43,6 +43,6 @@ __screenshots__/
 
 test-results/
 playwright-report/
-!.vscode/
-!.vscode/settings.json
-!.vscode/extensions.json
+
+# AI modified: keep local design sources and exports out of the repository.
+design

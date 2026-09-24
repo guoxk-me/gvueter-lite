@@ -2,7 +2,6 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
-
     // `vue-tsc --build` produces a .tsbuildinfo file for incremental type-checking.
     // Specified here to keep it out of the root directory.
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
@@ -17,11 +16,5 @@
     // Disable emitting output during `vue-tsc --build`, which is used for type-checking only.
     "noEmit": true
   },
-  "include": [
-    "vite.config.*",
-    "vitest.config.*",
-    "cypress.config.*",
-    "playwright.config.*",
-    "eslint.config.*"
-  ]
+  "include": ["vite.config.*", "cypress.config.*", "playwright.config.*"]
 }

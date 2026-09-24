@@ -1,4 +1,10 @@
 {
+  // AI modified: expose the existing src alias to shadcn-vue's project resolver.
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"

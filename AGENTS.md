@@ -87,6 +87,12 @@ Example:
 * Prefer built-in platform APIs.
 * Prefer modifying existing files.
 * Create new files only when responsibility separation is clearly justified.
+<!-- AI modified: keep product decisions and delivery status current across tasks. -->
+## Product Documentation
+* Read `design/PRODUCT.md` before starting every task.
+* Before finishing every task, sync `design/PRODUCT.md` with any product decisions, user-visible behavior, and prototype or implementation status changes.
+* Add a dated entry to its synchronization log for every task. If there is no product impact, record `无产品影响` after checking that the document is still accurate.
+* Keep unresolved choices marked as pending; do not present plans or prototypes as implemented features.
 ## High-Risk Changes
 Require confirmation before:
 * Database schema changes

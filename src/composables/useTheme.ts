@@ -1,35 +1,41 @@
 import { ref } from 'vue'
 
+export type ThemeMode = 'light' | 'dark' | 'system'
+
+const themeMode = ref<ThemeMode>('system')
 const isDark = ref(false)
 let isInitialized = false
 
-// AI modified: extracted shared theme state so both Basic and Core routes share the theme synchronously.
+function applyTheme(): void {
+  const prefersDark =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  isDark.value = themeMode.value === 'dark' || (themeMode.value === 'system' && prefersDark)
+  document.documentElement.classList.toggle('dark', isDark.value)
+}
+
+// AI modified: System tracks OS changes while explicit Light and Dark choices stay persistent.
 export function useTheme() {
   if (!isInitialized && typeof window !== 'undefined') {
     const savedTheme = localStorage.getItem('gvueter-lite-theme')
-    const prefersDark =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    isDark.value = savedTheme === 'dark' || (!savedTheme && prefersDark)
-    document.documentElement.classList.toggle('dark', isDark.value)
+    themeMode.value = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'system'
+    applyTheme()
+    if (typeof window.matchMedia === 'function') {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyTheme)
+    }
     isInitialized = true
   }
 
-  function toggleTheme(): void {
-    isDark.value = !isDark.value
-    document.documentElement.classList.toggle('dark', isDark.value)
-    localStorage.setItem('gvueter-lite-theme', isDark.value ? 'dark' : 'light')
+  function setTheme(mode: ThemeMode): void {
+    themeMode.value = mode
+    applyTheme()
+    localStorage.setItem('gvueter-lite-theme', mode)
   }
 
-  function setTheme(dark: boolean): void {
-    isDark.value = dark
-    document.documentElement.classList.toggle('dark', dark)
-    localStorage.setItem('gvueter-lite-theme', dark ? 'dark' : 'light')
+  // AI modified: one click advances through all three themes without a menu.
+  function cycleTheme(): void {
+    setTheme(themeMode.value === 'light' ? 'dark' : themeMode.value === 'dark' ? 'system' : 'light')
   }
 
-  return {
-    isDark,
-    toggleTheme,
-    setTheme,
-  }
+  return { themeMode, isDark, setTheme, cycleTheme }
 }

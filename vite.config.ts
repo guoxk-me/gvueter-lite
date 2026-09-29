@@ -3,6 +3,7 @@ import { createRequire } from 'node:module'
 import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import vueI18n from '@intlify/unplugin-vue-i18n/vite'
 import vue from '@vitejs/plugin-vue'
 import Inspect from 'vite-plugin-inspect'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -55,6 +56,8 @@ export default defineConfig({
     tailwindcss(),
     vue(),
     vueDevTools(),
+    // AI modified: precompile locale messages at build time instead of loading YAML as plain objects.
+    vueI18n({ include: fileURLToPath(new URL('./locales/*.yaml', import.meta.url)) }),
     Inspect({
       dev: true,
       build: process.env.VITE_INSPECT_BUILD === 'true',
@@ -63,6 +66,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@locales': fileURLToPath(new URL('./locales', import.meta.url)),
     },
   },
 })

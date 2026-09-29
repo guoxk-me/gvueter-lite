@@ -1,33 +1,34 @@
 peerDependencyRules:
-  # AI modified: the Vite+ core alias is versioned 0.3.3 while providing Vite 8 APIs.
+  # AI modified: Vite+ core uses the CLI version while providing Vite 8 APIs.
   allowedVersions:
-    vite: 0.3.3
+    vite: '*'
+  allowAny:
+    - vite
 
 shellEmulator: true
 
 overrides:
   # AI modified: align the Vue runtime and compiler packages with the stable gvueter baseline.
-  '@vue/compiler-core': 3.5.42
-  '@vue/compiler-dom': 3.5.42
-  '@vue/compiler-sfc': 3.5.42
-  '@vue/compiler-ssr': 3.5.42
-  '@vue/reactivity': 3.5.42
-  '@vue/runtime-core': 3.5.42
-  '@vue/runtime-dom': 3.5.42
-  '@vue/server-renderer': 3.5.42
-  '@vue/shared': 3.5.42
+  '@vue/compiler-core': 3.5.43
+  '@vue/compiler-dom': 3.5.43
+  '@vue/compiler-sfc': 3.5.43
+  '@vue/compiler-ssr': 3.5.43
+  '@vue/reactivity': 3.5.43
+  '@vue/runtime-core': 3.5.43
+  '@vue/runtime-dom': 3.5.43
+  '@vue/server-renderer': 3.5.43
+  '@vue/shared': 3.5.43
   # AI modified: pin patched transitive releases found by the full dependency audit.
-  baseline-browser-mapping: 2.11.0
-  body-parser: 1.20.6
-  brace-expansion: 5.0.9
-  browserslist: 4.28.9
-  nanoid: 3.3.18
+  baseline-browser-mapping: 2.11.26
+  brace-expansion: 5.0.12
+  browserslist: 4.29.1
+  nanoid: 3.3.19
   postcss: 8.5.28
   qs: 6.16.0
   # AI modified: match Vite+ core and bundled Vitest without overriding catalog declarations.
   vite@*: 'catalog:'
-  vitest@*: 4.1.11
-  vue: 3.5.42
+  vitest@*: 5.0.1
+  vue: 3.5.43
 
 allowBuilds:
   esbuild: true
@@ -36,41 +37,63 @@ allowBuilds:
 
 catalog:
   # AI modified: keep selected Vue, UI, and data capabilities on the gvueter baseline.
-  '@lucide/vue': ^1.45.0
+  # AI modified: precompile the existing YAML locale messages with Vue I18n's build plugin.
+  '@intlify/unplugin-vue-i18n': ^11.2.5
+  '@lucide/vue': ^1.48.0
   '@playwright/test': 1.63.0
   '@tailwindcss/vite': ^4.3.3
-  '@tanstack/vue-query': ^5.102.8
+  # AI modified: use TanStack Form for login state and validation.
+  '@tanstack/vue-form': ^1.33.5
+  '@tanstack/vue-query': ^5.104.0
   '@tanstack/vue-table': ^9.2.4
-  '@tanstack/vue-virtual': ^3.13.38
+  '@tanstack/vue-virtual': ^3.13.39
   '@tsconfig/node24': ^24.0.5
   '@types/jsdom': ^30.0.0
-  '@types/node': ^24.13.3
+  '@types/node': ^24.19.0
+  # AI modified: provide type definitions for nprogress.
+  '@types/nprogress': ^0.2.3
+  # AI modified: support rich-text editing and its related extensions.
+  '@tiptap/extension-code-block-lowlight': ^3.31.3
+  '@tiptap/extension-image': ^3.31.3
+  '@tiptap/extension-link': ^3.31.3
+  '@tiptap/extension-table': ^3.31.3
+  '@tiptap/extension-table-cell': ^3.31.3
+  '@tiptap/extension-table-header': ^3.31.3
+  '@tiptap/extension-table-row': ^3.31.3
+  '@tiptap/starter-kit': ^3.31.3
+  '@tiptap/vue-3': ^3.31.3
+  # AI modified: manage document head tags and page titles.
+  '@unhead/vue': ^3.4.1
   '@unovis/ts': ^1.7.0
   '@unovis/vue': ^1.7.0
-  '@vee-validate/zod': ^4.15.1
-  '@vitejs/plugin-vue': ^6.0.8
+  '@vitejs/plugin-vue': ^6.0.9
+  # AI modified: Vue component unit testing utilities.
+  '@vue/test-utils': ^2.5.1
   '@vue/tsconfig': ^0.9.1
-  '@vueuse/core': ^14.4.0
+  '@vueuse/core': ^15.0.0
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   https-localhost: ^4.7.2
-  jsdom: ^30.0.1
+  jsdom: ^30.1.1
+  lowlight: ^3.3.0
+  # AI modified: slim progress bar for route transitions.
+  nprogress: ^0.2.0
   pinia: ^4.0.3
-  reka-ui: ^2.10.4
-  tailwind-merge: ^3.6.0
+  reka-ui: ^2.10.5
+  tailwind-merge: ^3.7.0
   tailwindcss: ^4.3.3
   tw-animate-css: ^1.4.0
   typescript: ~6.0.3
-  vee-validate: ^4.15.1
-  vite: npm:@voidzero-dev/vite-plus-core@0.3.3
+  vite: npm:@voidzero-dev/vite-plus-core@1.0.0-rc.1
   vite-plugin-inspect: ^12.0.2
   # AI modified: prepare the optional PWA plugin without enabling a service worker yet.
   vite-plugin-pwa: 1.3.0
   vite-plugin-vue-devtools: ^8.2.1
-  vite-plus: 0.3.3
-  vue: 3.5.42
-  vue-i18n: 11.4.10
+  vite-plus: 1.0.0-rc.1
+  vue: 3.5.43
+  vue-i18n: 11.4.12
   vue-router: ^5.3.1
   vue-tsc: ^3.3.11
-  # AI modified: vee-validate's Zod adapter currently requires Zod 3.
+  # AI modified: retain Zod 3 by project decision after checking Zod 4 compatibility.
   zod: 3.25.76
+  vue-sonner: ^2.0.9

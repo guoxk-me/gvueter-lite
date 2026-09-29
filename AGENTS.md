@@ -35,39 +35,36 @@ Avoid:
 * Premature optimization
 * Dead code
 ## Naming Rules
+These rules apply to new and modified code in `gvueter-lite`. Rename existing identifiers and files when related work touches them; do not rename the codebase in bulk. Preserve exact names required by external APIs, libraries, frameworks, and generated code.
 ### General
 * Use clear, specific, business-oriented names.
-* Prefer business meaning over implementation details.
-* Avoid generic names such as: data, item, result, temp, value.
-* Avoid technical placeholder names such as: processedData, transformedData, parsedResponse, formattedResult, normalizedData.
+* Prefer business meaning when applicable; use accurate technical names for infrastructure behavior.
+* Avoid generic names such as `data`, `item`, `result`, `temp`, and `value`, except in a very short scope where the meaning is immediately clear.
+* Avoid technical placeholder names such as `processedData`, `transformedData`, `parsedResponse`, and `formattedResult`.
+* Write abbreviations consistently: `userId` and `apiUrl` in camelCase, `ApiResponse` in PascalCase.
 ### Variables
-* Use camelCase.
-* Boolean variables should start with: is, has, can, should.
-* Arrays should use plural names.
-### Functions
-* Use camelCase.
-* Function names should describe business behavior.
-* Functions should represent business logic, not simple data reshaping.
-* Prefer direct object construction for one-time transformations.
-Do NOT use:
-* normalize*
-* parse*
-* transform*
-* convert*
-* format*
-* build*
-* map*
-when they only perform field mapping, object reshaping, or property copying.
+* Use camelCase and specific domain names; use plural names for arrays.
+* Name booleans as clear true-or-false statements. Prefer `is`, `has`, `can`, or `should`; use `are` when grammatically appropriate. For example, use `isPasswordVisible` instead of `showPassword`.
+* Name refs and computed values by meaning, without `Ref` or `Computed` suffixes.
+* Use UPPER_SNAKE_CASE for named fixed keys and configuration constants, such as `STORAGE_KEY`. Use camelCase for local constants, module state, and collections such as `routes`.
+### Functions and Methods
+* Use camelCase and describe the actual action or result. Prefer business meaning when applicable; technical operations may use accurate technical names.
+* Do not require `handle` or `on` prefixes for event handlers: `toggleSidebar` and `handleFormSubmit` are both valid when they describe the behavior.
+* Do not require an `Async` suffix. Make reads, writes, and other side effects clear in the name; do not use a read-only sounding name for a write.
+* Prefer direct object construction for one-time field mapping. Do not introduce a helper solely to copy or reshape fields.
+* Avoid vague uses of `parse`, `transform`, `convert`, `format`, `build`, and `map`; use them when the function genuinely performs the named operation, such as `parseJson`.
+* Do not use `normalize` in names.
 ### Types
 * Use PascalCase.
-* Avoid prefixes such as I*and T*.
+* Avoid prefixes such as I* and T*.
 ### Components
 * Use PascalCase.
 ### Composables
-* Must start with use.
-### Files
-* Vue Components: PascalCase
-* Other files: kebab-case
+* Exported composable functions must start with `use`, such as `useTheme`.
+### Files and Directories
+* Use PascalCase for Vue component files and kebab-case for other self-named files and directories. For example, `LoginPage.vue` and `use-theme.ts` exporting `useTheme`.
+* Give test files the source file's stem plus `.spec`, such as `use-theme.spec.ts`.
+* Preserve conventional or externally defined names, including `index.ts`, `vite.config.ts`, `env.d.ts`, locale codes such as `zh-CN.yaml`, and shadcn-vue component files. Do not rename existing third-party components in bulk.
 ## AI Modification Comments
 * When AI changes logic, behavior, or structure, add a concise comment nearby.
 * Explain why the change exists.
@@ -87,6 +84,10 @@ Example:
 * Prefer built-in platform APIs.
 * Prefer modifying existing files.
 * Create new files only when responsibility separation is clearly justified.
+* Basic and Core are pen.dev design sections, not project directories; do not create `basic` or `core` folders for them.
+## Project Layers
+* Read the nearest nested `AGENTS.md` before changing files in a responsibility area; child instructions add local context to these repository-wide rules.
+* For a new page or product capability, use the repository skill at `.agents/skills/extend-gvueter-lite/SKILL.md` to route the change through the existing architecture.
 <!-- AI modified: keep product decisions and delivery status current across tasks. -->
 ## Product Documentation
 * Read `design/PRODUCT.md` before starting every task.

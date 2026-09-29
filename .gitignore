@@ -46,3 +46,4 @@ playwright-report/
 
 # AI modified: keep local design sources and exports out of the repository.
 design
+.vitest/

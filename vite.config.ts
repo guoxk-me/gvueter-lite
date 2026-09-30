@@ -1,4 +1,4 @@
-import type { Buffer } from 'node:buffer'
+import type { LocalhostCertificates, HttpsLocalhostModule } from './src/types/tooling/local-https'
 import { createRequire } from 'node:module'
 import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
@@ -11,15 +11,6 @@ import Inspect from 'vite-plugin-inspect'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 import { defineConfig } from 'vite-plus'
-
-interface LocalhostCertificates {
-  key: Buffer
-  cert: Buffer
-}
-
-interface HttpsLocalhostModule {
-  getCerts: (domain?: string) => Promise<LocalhostCertificates>
-}
 
 const require = createRequire(import.meta.url)
 
@@ -79,7 +70,7 @@ export default defineConfig({
     Components({ dirs: ['src/components/ui'], dts: 'src/components.d.ts' }),
     // AI modified: public routes use the layout plugin while the protected route keeps its existing shell.
     Layouts({
-      layoutsDirs: 'src/components/layout',
+      layoutsDirs: 'src/layouts',
       defaultLayout: 'PublicLayout',
       exclude: ['DefaultLayout.vue'],
     }),

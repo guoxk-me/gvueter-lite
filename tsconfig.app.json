@@ -15,5 +15,6 @@
   },
   // AI modified: retain an input for type checking while the app source is absent.
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
-  "exclude": ["src/**/__tests__/*"]
+  // AI modified: tooling-only types are checked by the Node project, not browser globals.
+  "exclude": ["src/**/__tests__/*", "src/types/tooling/**"]
 }

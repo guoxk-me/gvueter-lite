@@ -1,13 +1,18 @@
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 import NProgress from 'nprogress'
+import { readonly, shallowRef } from 'vue'
+import axios from 'axios'
+import { isCancelledError } from '@tanstack/vue-query'
 import { setupLayouts } from 'virtual:generated-layouts'
-import DashboardPage from '@/components/dashboard/DashboardPage.vue'
-import AdminLayout from '@/components/layout/AdminLayout.vue'
-import LoginPage from '@/components/login/LoginPage.vue'
-import { useAuth } from '@/composables/use-auth'
-import { clearPrivateQueries, queryClient } from '@/composables/query-client'
-import { setUnauthorizedAction } from '@/composables/request'
+// AI modified: route pages and reusable layouts have separate directory ownership.
+// AI modified: routes consume page entries; their supporting components and composables remain private.
+import DashboardPage from '@/pages/dashboard/index.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import LoginPage from '@/pages/login/index.vue'
+import { clearSession, useAuth } from '@/composables/use-auth'
+import { queryClient } from '@/query-client'
+import { http, setUnauthorizedAction } from '@/http/http-client'
 import 'nprogress/nprogress.css'
 
 // AI modified: configure nprogress for route navigation.
@@ -19,11 +24,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/invitations/accept',
     name: 'accept-invitation',
-    component: () => import('@/components/users/AcceptInvitationPage.vue'),
+    component: () => import('@/pages/accept-invitation/index.vue'),
   },
   {
-    path: '/dashboard',
-    component: AdminLayout,
+    // AI modified: use a neutral parent path for all signed-in features, not just the dashboard.
+    path: '/main',
+    component: DefaultLayout,
     // AI modified: keep one persistent authenticated shell instead of wrapping its child routes again.
     meta: { requiresAuth: true, layout: false },
     // AI modified: authenticated pages share one shell while each page owns only its content.
@@ -32,19 +38,19 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'users',
         name: 'users',
-        component: () => import('@/components/users/UsersPage.vue'),
+        component: () => import('@/pages/users/index.vue'),
       },
       // AI modified: personal model settings use the same authenticated shell as conversations.
       {
         path: 'assistant/settings',
         name: 'assistant-settings',
-        component: () => import('@/components/assistant/AssistantSettingsPage.vue'),
+        component: () => import('@/pages/assistant-settings/index.vue'),
       },
-      // AI modified: the assistant page shares the authenticated dashboard shell and its drawer state.
+      // AI modified: the assistant page shares the default shell and its drawer state.
       {
         path: 'assistant',
         name: 'assistant',
-        component: () => import('@/components/assistant/AssistantPage.vue'),
+        component: () => import('@/pages/assistant/index.vue'),
       },
     ],
   },
@@ -59,34 +65,57 @@ export const router = createRouter({
 // AI modified: route metadata decides whether a 401 redirects, so public flows can explain errors locally.
 setUnauthorizedAction(() => {
   if (!router.currentRoute.value.meta.requiresAuth) return
-  clearPrivateQueries()
+  clearSession()
   void router.replace({ name: 'login' })
 })
 
-// AI modified: validate the server session before exposing the protected dashboard and show progress feedback.
-router.beforeEach(async (to) => {
+// AI modified: first-load failures have a retry surface; later failures preserve the mounted page.
+const failedNavigation = shallowRef<string | null>(null)
+const isRetryingNavigation = shallowRef(false)
+export const navigationFailure = readonly(failedNavigation)
+export const isNavigationRetrying = readonly(isRetryingNavigation)
+
+export async function retryNavigation(): Promise<void> {
+  if (!failedNavigation.value || isRetryingNavigation.value) return
+  isRetryingNavigation.value = true
+  try {
+    await router.replace(failedNavigation.value)
+  } finally {
+    isRetryingNavigation.value = false
+  }
+}
+
+router.beforeEach(async (to, from) => {
   NProgress.start()
+  // Public invitations must remain available without a session-service dependency.
+  if (to.name === 'accept-invitation') return true
   const { loadSession } = useAuth()
   let hasSession = false
   try {
-    // AI modified: every navigation asks the server, without cached or retried auth decisions.
     queryClient.removeQueries({ queryKey: ['session'] })
     hasSession =
       (await queryClient.fetchQuery({
         queryKey: ['session'],
-        queryFn: loadSession,
+        queryFn: ({ signal }) => loadSession(signal),
         retry: false,
+        meta: { silent: true },
       })) !== null
-  } catch {
-    hasSession = false
+  } catch (error: unknown) {
+    if (!axios.isCancel(error) && !isCancelledError(error)) {
+      if (from.matched.length === 0) failedNavigation.value = to.fullPath
+      else http.reportError(error)
+    }
+    return false
   }
 
+  failedNavigation.value = null
   if (to.meta.requiresAuth && !hasSession) return { name: 'login' }
   if (to.name === 'login' && hasSession) return { name: 'dashboard' }
   return true
 })
 
-router.afterEach(() => {
+router.afterEach((_to, _from, failure) => {
+  if (!failure) failedNavigation.value = null
   NProgress.done()
 })
 

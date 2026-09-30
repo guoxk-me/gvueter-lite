@@ -1,22 +1,10 @@
+import type { WebMcpContext } from '@/types/web-mcp/tool'
+// AI modified: shared pure types live in the centralized owner directory.
+
 import { onMounted, onUnmounted } from 'vue'
 import { z } from 'zod'
-import { useTheme } from '@/composables/useTheme'
+import { useTheme } from '@/composables/use-theme'
 import { setLocale } from '@/i18n'
-
-interface WebMcpTool {
-  name: string
-  description: string
-  inputSchema: {
-    type: 'object'
-    properties: Record<string, { type: 'string'; enum: string[] }>
-    required: string[]
-  }
-  execute: (input: unknown) => Promise<string>
-}
-
-interface WebMcpContext {
-  registerTool: (tool: WebMcpTool, options: { signal: AbortSignal }) => Promise<void>
-}
 
 const themeInput = z.object({ theme: z.enum(['light', 'dark', 'system']) })
 const languageInput = z.object({ language: z.enum(['zh-CN', 'en-US']) })

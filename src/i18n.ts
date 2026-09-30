@@ -1,8 +1,9 @@
+import type { SupportedLocale } from '@/types/i18n/locale'
+// AI modified: shared pure types live in the centralized owner directory.
+
 import { createI18n } from 'vue-i18n'
 import enUS from '@locales/en-US.yaml'
 import zhCN from '@locales/zh-CN.yaml'
-
-export type SupportedLocale = 'zh-CN' | 'en-US'
 
 // AI modified: load locale messages from external YAML configurations.
 export const messages = {

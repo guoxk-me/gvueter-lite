@@ -1,16 +1,13 @@
 <script setup lang="ts">
+import type { LoginPayload } from '@/types/login/form'
+
 import { ref } from 'vue'
 import { ArrowUpRight, Eye, EyeOff, LoaderCircle, Lock, Mail } from '@lucide/vue'
 import { useForm } from '@tanstack/vue-form'
 import { useI18n } from 'vue-i18n'
 import { z } from 'zod'
 import { Checkbox } from '@/components/ui/checkbox'
-
-export interface LoginPayload {
-  email: string
-  password: string
-  rememberMe: boolean
-}
+// AI modified: shared pure types live in the centralized owner directory.
 
 const props = defineProps<{ isSubmitting?: boolean }>()
 

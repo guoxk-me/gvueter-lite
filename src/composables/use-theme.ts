@@ -1,6 +1,7 @@
-import { ref } from 'vue'
+import type { ThemeMode } from '@/types/theme/theme'
+// AI modified: shared pure types live in the centralized owner directory.
 
-export type ThemeMode = 'light' | 'dark' | 'system'
+import { ref } from 'vue'
 
 const themeMode = ref<ThemeMode>('system')
 const isDark = ref(false)

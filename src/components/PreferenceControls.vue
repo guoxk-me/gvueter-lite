@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { SupportedLocale } from '@/i18n'
-import type { ThemeMode } from '@/composables/useTheme'
+import type { SupportedLocale } from '@/types/i18n/locale'
+import type { ThemeMode } from '@/types/theme/theme'
+
 import { Monitor, Moon, Sun } from '@lucide/vue'
 import { useI18n } from 'vue-i18n'
 

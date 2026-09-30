@@ -1,16 +1,24 @@
 <script setup lang="ts">
+import type { LoginPayload } from '@/types/login/form'
+import type { SupportedLocale } from '@/types/i18n/locale'
+import type { PageNotice } from '@/types/login/feedback'
+
+import { isCancel } from 'axios'
 import { computed, ref } from 'vue'
 import { Info, X } from '@lucide/vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useMutation } from '@tanstack/vue-query'
 import PreferenceControls from '@/components/PreferenceControls.vue'
-import LoginForm, { type LoginPayload } from '@/components/login/LoginForm.vue'
+// AI modified: keep page-private UI and lifecycle code in their own supporting folders.
+import LoginForm from './components/LoginForm.vue'
 import { useAuth } from '@/composables/use-auth'
-import { RequestError } from '@/composables/request'
-import { useLoginWebMcp } from '@/composables/use-login-web-mcp'
-import { useTheme } from '@/composables/useTheme'
-import { setLocale, type SupportedLocale } from '@/i18n'
+import { RequestError } from '@/http/http-client'
+import { useLoginWebMcp } from './composables/use-login-web-mcp'
+import { useTheme } from '@/composables/use-theme'
+import { setLocale } from '@/i18n'
+
+// AI modified: shared pure types live in the centralized owner directory.
 
 // AI modified: share the compact login layout, preferences, and server-auth feedback.
 const { themeMode, cycleTheme } = useTheme()
@@ -20,11 +28,6 @@ const router = useRouter()
 const { t, locale } = useI18n()
 // AI modified: register login preference tools only while this page is mounted.
 useLoginWebMcp()
-
-interface PageNotice {
-  type: 'info' | 'warning'
-  message: string
-}
 
 const pageNotice = ref<PageNotice | null>(null)
 const isSubmitting = ref(false)
@@ -45,6 +48,8 @@ async function handleFormSubmit(credentials: LoginPayload): Promise<void> {
     await signInMutation.mutateAsync(credentials)
     await router.replace({ name: 'dashboard' })
   } catch (error: unknown) {
+    // AI modified: cancelling an old login/session check is not a sign-in failure.
+    if (isCancel(error)) return
     let failureMessage = t('login.authUnavailable')
     if (error instanceof RequestError && error.code === 'INVALID_CREDENTIALS') {
       failureMessage = t('login.invalidCredentials')
@@ -76,6 +81,8 @@ function handleContactSupport(): void {
     message: t('login.supportNotice'),
   }
 }
+// AI modified: preserve the page's component identity after standardizing its entry filename.
+defineOptions({ name: 'LoginPage' })
 </script>
 
 <template>

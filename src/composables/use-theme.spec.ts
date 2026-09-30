@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vite-plus/test'
-import { useTheme } from './useTheme'
+import { useTheme } from './use-theme'
 
 // AI modified: test explicit choices and the persisted System choice.
 describe('useTheme', () => {

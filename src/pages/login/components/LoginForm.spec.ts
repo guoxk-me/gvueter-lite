@@ -1,6 +1,7 @@
+import type { LoginPayload } from '@/types/login/form'
 import { createApp, nextTick } from 'vue'
 import { beforeEach, describe, expect, it } from 'vite-plus/test'
-import LoginForm, { type LoginPayload } from './LoginForm.vue'
+import LoginForm from './LoginForm.vue'
 import { i18n, setLocale } from '@/i18n'
 
 // AI modified: unit tests for LoginForm validation, event emissions, and password visibility toggling.

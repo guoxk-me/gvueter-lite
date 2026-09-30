@@ -2,14 +2,20 @@ import { createApp, nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { VueQueryPlugin } from '@tanstack/vue-query'
-import LoginPage from './LoginPage.vue'
-import { queryClient } from '@/composables/query-client'
-import { useTheme } from '@/composables/useTheme'
+import LoginPage from '../index.vue'
+import { queryClient } from '@/query-client'
+import { useTheme } from '@/composables/use-theme'
 import { i18n, setLocale } from '@/i18n'
 
-const authRequest = vi.hoisted(() => ({ get: vi.fn(), post: vi.fn() }))
-vi.mock('@/composables/request', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@/composables/request')>()),
+// AI modified: keep the login navigation fixture aligned with the current HTTP auth lifecycle.
+const authRequest = vi.hoisted(() => ({
+  get: vi.fn(),
+  post: vi.fn(),
+  resetAuthState: vi.fn(),
+  clearAuthState: vi.fn(),
+}))
+vi.mock('@/http/http-client', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/http/http-client')>()),
   http: authRequest,
 }))
 
@@ -41,7 +47,7 @@ describe('LoginPage', () => {
       history: createMemoryHistory(),
       routes: [
         { path: '/', name: 'login', component: LoginPage },
-        { path: '/dashboard', name: 'dashboard', component: { template: '<div>Dashboard</div>' } },
+        { path: '/main', name: 'dashboard', component: { template: '<div>Dashboard</div>' } },
       ],
     })
     app.use(router)
@@ -122,8 +128,9 @@ describe('LoginPage', () => {
     expect(authRequest.post).toHaveBeenCalledWith(
       'session/login',
       expect.objectContaining({ email: 'user@company.com' }),
+      expect.objectContaining({ auth: false, silent: true }),
     )
-    expect(router.currentRoute.value.path).toBe('/dashboard')
+    expect(router.currentRoute.value.path).toBe('/main')
 
     destroy()
   })

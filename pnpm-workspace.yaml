@@ -115,3 +115,6 @@ catalog:
   # AI modified: retain Zod 3 by project decision after checking Zod 4 compatibility.
   zod: 3.25.76
   vue-sonner: ^2.0.9
+  # AI modified: prepare shared CASL rules and Vue permission display for the agreed architecture.
+  '@casl/ability': ^7.0.1
+  '@casl/vue': ^3.0.1

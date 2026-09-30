@@ -71,7 +71,8 @@ These rules apply to new and modified code in `gvueter-lite`. Rename existing id
 ### Composables
 * Exported composable functions must start with `use`, such as `useTheme`.
 ### Files and Directories
-* Use PascalCase for Vue component files and kebab-case for other self-named files and directories. For example, `LoginPage.vue` and `use-theme.ts` exporting `useTheme`.
+<!-- AI modified: page entries use index.vue while supporting component names remain meaningful. -->
+* Route page entries use `src/pages/<page>/index.vue`; other Vue component files use PascalCase. Use kebab-case for other self-named files and directories. For example, `LoginForm.vue` and `use-theme.ts` exporting `useTheme`.
 * Give test files the source file's stem plus `.spec`, such as `use-theme.spec.ts`.
 * Preserve conventional or externally defined names, including `index.ts`, `vite.config.ts`, `env.d.ts`, locale codes such as `zh-CN.yaml`, and shadcn-vue component files. Do not rename existing third-party components in bulk.
 ## AI Modification Comments
@@ -95,6 +96,8 @@ Example:
 * Create new files only when responsibility separation is clearly justified.
 * Basic and Core are pen.dev design sections, not project directories; do not create `basic` or `core` folders for them.
 ## Project Layers
+<!-- AI modified: directory ownership has a versioned authority and executable gate. -->
+* Use [docs/architecture.md](docs/architecture.md) for directory responsibilities, dependency rules, and pending migration items. Run `pnpm verify:architecture` after moving files or changing imports.
 * Read the nearest nested `AGENTS.md` before changing files in a responsibility area; child instructions add local context to these repository-wide rules.
 * For a new page or product capability, use the repository skill at `.agents/skills/extend-gvueter-lite/SKILL.md` to route the change through the existing architecture.
 <!-- AI modified: keep product decisions and delivery status current across tasks. -->

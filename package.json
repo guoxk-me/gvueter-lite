@@ -9,9 +9,14 @@
     "type-check": "vue-tsc --build",
     "lint": "vp lint",
     "format": "vp fmt",
-    "up": "taze major -I"
+    "up": "taze major -I",
+    "verify:architecture": "node scripts/verify-architecture.mjs",
+    "test:architecture": "node --test scripts/verify-architecture.spec.mjs",
+    "verify": "pnpm verify:architecture && pnpm test:architecture && pnpm type-check && pnpm lint && pnpm test:unit && vp build"
   },
   "dependencies": {
+    "@casl/ability": "catalog:",
+    "@casl/vue": "catalog:",
     "@lucide/vue": "catalog:",
     "@tanstack/vue-form": "catalog:",
     "@tanstack/vue-query": "catalog:",

@@ -1,12 +1,17 @@
 <script setup lang="ts">
+import { RouterView } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import { useTheme } from '@/composables/useTheme'
 
-// AI modified: keep the app entry limited to shared theme and the active reference page.
+// AI modified: keep shared theme state mounted while routes switch after authentication.
 useTheme()
+
+// AI modified: configure default head metadata with unhead.
+useHead({
+  title: 'Gvueter Lite',
+})
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-foreground antialiased">
-    <router-view />
-  </div>
+  <RouterView />
 </template>

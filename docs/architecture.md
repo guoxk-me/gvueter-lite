@@ -4,6 +4,10 @@
 
 `gvueter-lite` 是供团队复制后直接开发源码的后台模板，`gnester-lite` 是默认服务端；两库独立交付。默认单组织、模块化单体、一个 API 实例，worker 默认同进程，未来可按需拆出单个 worker。不引入模块插件注册系统。
 
+<!-- AI modified: record the confirmed companion-server boundaries without applying backend placement rules to Vue. -->
+
+默认后端 gnester-lite 使用 `bootstrap/`、`config/`、小型 `common/`、完整非业务运行能力 `infra/` 和 `modules/`。当前账号／会话／邀请／管理合并归 `modules/identity`，助手归 `modules/assistant`，统一通过 `ApplicationModule` 装配；后端 DTO、类型和测试就近归模块，Demo 已移除。前端继续采用本文的类型目录和职责分工；Cookie、CSRF、响应 envelope 与现有业务端点保持兼容。
+
 ## 前端目录职责
 
 | 目录／文件                                        | 职责与依赖                                                                               |
@@ -86,4 +90,4 @@ Vue Query 持有服务端资源和缓存；Pinia 持有跨页面客户端状态�
 
 ## 新增业务
 
-以订单为例（不是新增订单功能）：服务端 `orders` 定义 DTO、操作服务和权限；纯类型归 `types/orders`；仅有真实需求时增加 repository／adapter 或稳定公开入口。更新固定 OpenAPI，生成前端 `types/generated`，编写 `api/orders` 请求；页面专属查询／写入流程归 `pages/orders/composables`，UI 归 `pages/orders/components`，入口为 `pages/orders/index.vue`，入口测试归 `pages/orders/tests/index.spec.ts`；真正跨页／跨容器的流程归 `composables/orders`，业务 UI 归 `components/orders`，只有跨页客户端状态才建 store。登记路由。通用表单／表格只接配置和 adapter。完成类型、lint、行为测试、构建及目录检查，更新实现状态。
+以订单为例（不是新增订单功能）：服务端 `modules/orders` 定义 DTO、操作服务和权限，后端内部类型就近归该模块；前端业务契约归 `types/orders`；仅有真实需求时增加 repository／adapter 或稳定公开入口。更新固定 OpenAPI，生成前端 `types/generated`，编写 `api/orders` 请求；页面专属查询／写入流程归 `pages/orders/composables`，UI 归 `pages/orders/components`，入口为 `pages/orders/index.vue`，入口测试归 `pages/orders/tests/index.spec.ts`；真正跨页／跨容器的流程归 `composables/orders`，业务 UI 归 `components/orders`，只有跨页客户端状态才建 store。登记路由。通用表单／表格只接配置和 adapter。完成类型、lint、行为测试、构建及目录检查，更新实现状态。

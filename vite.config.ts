@@ -5,8 +5,11 @@ import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import vueI18n from '@intlify/unplugin-vue-i18n/vite'
 import vue from '@vitejs/plugin-vue'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 import Inspect from 'vite-plugin-inspect'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import Layouts from 'vite-plugin-vue-layouts'
 import { defineConfig } from 'vite-plus'
 
 interface LocalhostCertificates {
@@ -45,6 +48,15 @@ export default defineConfig({
   },
   server: {
     https: localHttpsCertificates,
+    // AI modified: an unexpected fallback port would no longer match gnester-lite's trusted login origins.
+    strictPort: true,
+    // AI modified: proxy the application API through one origin so browser auth cookies work locally.
+    proxy: {
+      '/api': {
+        target: process.env.GVUETER_AUTH_TARGET || 'http://127.0.0.1:3000',
+        changeOrigin: true,
+      },
+    },
   },
   // AI modified: Vite+ now reads test settings from its shared config.
   test: {
@@ -58,6 +70,19 @@ export default defineConfig({
     vueDevTools(),
     // AI modified: precompile locale messages at build time instead of loading YAML as plain objects.
     vueI18n({ include: fileURLToPath(new URL('./locales/*.yaml', import.meta.url)) }),
+    // AI modified: keep Vue helpers and shared UI controls available without repeated imports.
+    AutoImport({
+      imports: ['vue', 'vue-router'],
+      dts: 'src/auto-imports.d.ts',
+      dtsMode: 'overwrite',
+    }),
+    Components({ dirs: ['src/components/ui'], dts: 'src/components.d.ts' }),
+    // AI modified: public routes use the layout plugin while the protected route keeps its existing shell.
+    Layouts({
+      layoutsDirs: 'src/components/layout',
+      defaultLayout: 'PublicLayout',
+      exclude: ['DefaultLayout.vue'],
+    }),
     Inspect({
       dev: true,
       build: process.env.VITE_INSPECT_BUILD === 'true',

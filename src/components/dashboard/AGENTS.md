@@ -1,6 +1,6 @@
 # Dashboard page
 
-This folder owns dashboard content inside the shared `AdminLayout`. Its metrics, trend, and activity are currently example data.
+This folder owns dashboard content inside the shared `DefaultLayout`. Its metrics, trend, and activity are currently example data.
 
 * Keep example data visibly labeled until a real data API is connected. Do not imply that a static metric is live.
 * Keep sidebar, top bar, and account controls in `../layout/`; this page owns only its main content.

@@ -19,6 +19,15 @@
 * Refactor adjacent code only when it directly supports the current task.
 ### Push Back
 * If a request conflicts with correctness, security, or maintainability, explain the concern and propose a better alternative.
+<!-- AI modified: make product ownership and trade-offs explicit for future changes. -->
+## Product Purpose and Priorities
+* `gvueter-lite` is the primary product: a lightweight admin application template for teams building their own applications. It defines the user experience, workflows, and capability requirements.
+* `gnester-lite` is the default companion server. Use it for authentication, authorization, persistence, and background work when those responsibilities are needed. Keep the integration boundary clear enough to support another backend.
+* Start with a real `gvueter-lite` use case. Add only the supporting server capabilities needed in `gnester-lite`, and extract reusable components only after their boundaries are validated by real scenarios.
+* Treat security and correctness as hard requirements. When priorities compete, favor simple use and minimal configuration, then clear architecture and justified reuse, then complete common management workflows, then delivery speed.
+* Make common scenarios work with reliable defaults. Add configuration only for demonstrated differences; judge feature richness by complete, useful workflows rather than the number of options.
+* AI is an important product capability. The long-term goal is for users to ask AI to inspect, analyze, and perform any system action they are authorized to perform through capabilities explicitly exposed by each module. Plan those data and action boundaries when adding modules, and connect them to AI as the modules mature.
+* AI acts with the current user's permissions and must pass the same server-side authorization checks as the regular interface. Show proposed data changes and obtain explicit user confirmation before executing them. Keep ordinary management workflows usable when AI is unavailable.
 ## General Rules
 Before making changes:
 1. Understand the existing implementation.

@@ -25,5 +25,7 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "editor.formatOnSaveMode": "file"
+  "editor.formatOnSaveMode": "file",
+  "i18n-ally.localesPaths": ["locales"],
+  "i18n-ally.sourceLanguage": "zh-CN"
 }

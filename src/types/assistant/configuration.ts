@@ -1,38 +1,11 @@
 // AI modified: group pure types by stable concepts instead of implementation filenames.
-import type { AssistantModelChoice, AssistantProvider } from '@/types/assistant/model'
+import type { components } from '../generated/gnester-lite'
 
-export interface AssistantModelOption extends AssistantModelChoice {
-  isAvailable: boolean
-  reason:
-    | 'unavailable'
-    | 'pending_compatibility'
-    | 'retired'
-    | 'quota_exhausted'
-    | 'key_invalid'
-    | 'disabled'
-    | null
-}
-
-export interface AssistantKey {
-  id: string
-  provider: AssistantProvider
-  name: string
-  isEnabled: boolean
-  position: number
-  lastErrorCode: string | null
-  updatedAt: string
-  lastSyncedAt: string | null
-}
-
-export interface AssistantConfiguration {
-  keys: AssistantKey[]
-  models: AssistantModelOption[]
-  defaultModel: AssistantModelChoice | null
-  backupModels: AssistantModelChoice[]
-  hasOpenAiConsent: boolean
-  updatedAt: string | null
-  modelNotice: { previous: AssistantModelChoice; replacement: AssistantModelChoice | null } | null
-}
+// AI modified: configuration controls and responses share the verified OpenAPI contract.
+export type AssistantModelOption = components['schemas']['AssistantModelResponse']
+export type AssistantModelChange = components['schemas']['UpdateModelBody']
+export type AssistantKey = components['schemas']['AssistantKeyResponse']
+export type AssistantConfiguration = components['schemas']['AssistantConfigurationResponse']
 
 export interface AssistantBalance {
   status: 'available' | 'unsupported' | 'unavailable'

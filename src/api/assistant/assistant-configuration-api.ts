@@ -1,6 +1,10 @@
 import { http } from '@/http/http-client'
 import type { AssistantProvider } from '@/types/assistant/model'
-import type { AssistantConfiguration, AssistantBalance } from '@/types/assistant/configuration'
+import type {
+  AssistantConfiguration,
+  AssistantBalance,
+  AssistantModelChange,
+} from '@/types/assistant/configuration'
 import type { AssistantModelChoice } from '@/types/assistant/model'
 
 // AI modified: configuration endpoints return server values without owning client state.
@@ -31,6 +35,15 @@ export const assistantConfigurationApi = {
   },
   deleteKey(keyId: string): Promise<AssistantConfiguration> {
     return http.delete(`assistant/keys/${keyId}`, { silent: true })
+  },
+  // AI modified: model switches submit defaults atomically; emergency revocation cancels work rather than waiting for deletion.
+  updateModel(changes: AssistantModelChange): Promise<AssistantConfiguration> {
+    return http.patch('assistant/models', changes, { silent: true })
+  },
+  revokeKey(keyId: string): Promise<AssistantConfiguration> {
+    return http.post(`assistant/keys/${encodeURIComponent(keyId)}/revoke`, undefined, {
+      silent: true,
+    })
   },
   refreshModels(keyId: string): Promise<AssistantConfiguration> {
     return http.post(`assistant/keys/${keyId}/refresh-models`, undefined, { silent: true })

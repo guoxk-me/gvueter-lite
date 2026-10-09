@@ -1,6 +1,10 @@
 import type { AssistantProvider } from '@/types/assistant/model'
 import type { AssistantModelChoice } from '@/types/assistant/model'
-import type { AssistantConfiguration, AssistantBalance } from '@/types/assistant/configuration'
+import type {
+  AssistantConfiguration,
+  AssistantBalance,
+  AssistantModelChange,
+} from '@/types/assistant/configuration'
 // AI modified: shared pure types live in the centralized owner directory.
 
 import { computed, readonly, shallowRef, watch } from 'vue'
@@ -150,6 +154,13 @@ async function updateKey(
 async function deleteKey(keyId: string): Promise<void> {
   await acceptOwnedConfiguration(assistantConfigurationApi.deleteKey(keyId))
 }
+// AI modified: accept the response only for the initiating account, as with other personal configuration writes.
+async function updateModel(changes: AssistantModelChange): Promise<void> {
+  await acceptOwnedConfiguration(assistantConfigurationApi.updateModel(changes))
+}
+async function revokeKey(keyId: string): Promise<void> {
+  await acceptOwnedConfiguration(assistantConfigurationApi.revokeKey(keyId))
+}
 async function refreshModels(keyId: string): Promise<void> {
   await acceptOwnedConfiguration(assistantConfigurationApi.refreshModels(keyId))
 }
@@ -182,6 +193,8 @@ export function useAssistantConfiguration() {
     replaceKey,
     updateKey,
     deleteKey,
+    updateModel,
+    revokeKey,
     refreshModels,
     readBalance,
     savePreferences,

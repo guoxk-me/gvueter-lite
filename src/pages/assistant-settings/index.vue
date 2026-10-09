@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { AssistantBalance, AssistantKey } from '@/types/assistant/configuration'
+import type {
+  AssistantBalance,
+  AssistantKey,
+  AssistantModelChange,
+} from '@/types/assistant/configuration'
 import type { AssistantModelChoice } from '@/types/assistant/model'
 import type { AssistantProvider } from '@/types/assistant/model'
 
@@ -11,6 +15,7 @@ import { useRoute, useRouter } from 'vue-router'
 import ConfirmDialog from '@/components/overlay/ConfirmDialog.vue'
 import SidePanel from '@/components/overlay/SidePanel.vue'
 import { useAssistantConfiguration } from '@/composables/assistant/use-assistant-configuration'
+import ModelControls from './components/ModelControls.vue'
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -38,6 +43,8 @@ const form = reactive({ keyId: '', name: '', apiKey: '' })
 const isFormOpen = ref(false)
 const originalKeyName = ref('')
 const deletingKey = ref<AssistantKey | null>(null)
+// AI modified: emergency revocation requires a separate confirmation from ordinary deletion.
+const revokingKey = ref<AssistantKey | null>(null)
 const renamingKeyId = ref<string | null>(null)
 const renamedKey = ref('')
 const defaultIdentity = ref('')
@@ -160,6 +167,18 @@ async function removeKey(): Promise<void> {
     await assistant.deleteKey(key.id)
     deletingKey.value = null
   })
+}
+async function revokeKey(): Promise<void> {
+  const key = revokingKey.value
+  if (!key) return
+  await run(async () => {
+    await assistant.revokeKey(key.id)
+    delete balances[key.id]
+    revokingKey.value = null
+  })
+}
+async function changeModel(changes: AssistantModelChange): Promise<void> {
+  await run(() => assistant.updateModel(changes))
 }
 async function savePreferences(): Promise<void> {
   await run(async () => {
@@ -427,6 +446,14 @@ defineOptions({ name: 'AssistantSettingsPage' })
               >
                 {{ t('assistant.delete') }}
               </button>
+              <button
+                type="button"
+                class="text-destructive"
+                :disabled="isBusy || !assistant.isVerified.value"
+                @click="revokingKey = key"
+              >
+                {{ t('assistant.settings.revokeKey') }}
+              </button>
             </div>
           </article>
         </div>
@@ -510,6 +537,13 @@ defineOptions({ name: 'AssistantSettingsPage' })
         </button>
       </section>
     </div>
+    <ModelControls
+      :models="assistant.configuration.value?.models ?? []"
+      :default-model="assistant.configuration.value?.defaultModel ?? null"
+      :backup-models="assistant.configuration.value?.backupModels ?? []"
+      :is-busy="isBusy || !assistant.isVerified.value"
+      @change="changeModel"
+    />
     <SidePanel
       :open="isFormOpen"
       :title="form.keyId ? t('assistant.settings.replace') : t('assistant.settings.addKey')"
@@ -573,6 +607,20 @@ defineOptions({ name: 'AssistantSettingsPage' })
         }
       "
       @confirm="removeKey"
+    />
+    <ConfirmDialog
+      :open="revokingKey !== null"
+      :title="t('assistant.settings.revokeKeyTitle')"
+      :description="t('assistant.settings.revokeKeyDescription')"
+      :confirm-text="t('assistant.settings.revokeKey')"
+      :is-loading="isBusy"
+      variant="destructive"
+      @update:open="
+        (open) => {
+          if (!open) revokingKey = null
+        }
+      "
+      @confirm="revokeKey"
     />
   </div>
 </template>

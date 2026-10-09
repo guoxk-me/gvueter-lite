@@ -6,15 +6,13 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 // AI modified: shared pure types live in the centralized owner directory.
 
 // AI modified: ConfirmDialog wraps AlertDialog primitive for high-impact actions with loading and duplicate-submission protection.
@@ -84,21 +82,24 @@ function handleOpenChange(newOpen: boolean): void {
       </AlertDialogHeader>
 
       <AlertDialogFooter class="mt-4 gap-2 sm:gap-2">
-        <AlertDialogCancel
+        <!-- AI modified: callers own closing so primitive auto-close cannot clear pending actions before confirmation. -->
+        <Button
           :disabled="isLoading"
+          variant="outline"
           class="cursor-pointer"
-          @click.prevent="handleCancel"
+          @click="handleCancel"
         >
           {{ defaultCancelText }}
-        </AlertDialogCancel>
-        <AlertDialogAction
+        </Button>
+        <Button
           :disabled="isLoading"
-          :class="[buttonVariants({ variant }), 'cursor-pointer gap-1.5']"
-          @click.prevent="handleConfirm"
+          :variant="variant"
+          class="cursor-pointer gap-1.5"
+          @click="handleConfirm"
         >
           <LoaderCircle v-if="isLoading" class="size-4 animate-spin" />
           <span>{{ defaultConfirmText }}</span>
-        </AlertDialogAction>
+        </Button>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

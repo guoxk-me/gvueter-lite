@@ -45,6 +45,9 @@ describe('ConfirmDialog', () => {
     await confirmButton?.trigger('click')
 
     expect(wrapper.emitted('confirm')).toBeTruthy()
+    // AI modified: async confirmation must not also cancel or discard the caller's pending operation.
+    expect(wrapper.emitted('cancel')).toBeUndefined()
+    expect(wrapper.emitted('update:open')).toBeUndefined()
   })
 
   it('disables buttons and prevents action when loading', async () => {

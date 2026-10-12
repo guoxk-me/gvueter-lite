@@ -1,49 +1,15 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-.pnpm-store
+# AI modified: start with local-secret and generated-file exclusions for the new project.
 .DS_Store
-dist
-dist-ssr
-dev-dist
-.vite-ssg-temp
-coverage
+.env
+.env.*
+!.env.example
 *.local
-
-# Editor directories and files
-.vscode/*
-# AI modified: keep shared VS Code settings tracked while ignoring local workspace files.
-!.vscode/extensions.json
-!.vscode/settings.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
+node_modules/
+.pnpm-store/
+dist/
+build/
+coverage/
 *.tsbuildinfo
-
-# Cypress
-/cypress/videos/
-/cypress/screenshots/
-
-# Vitest
-__screenshots__/
-
-# Vite
-*.timestamp-*-*.mjs
-
+*.log
 test-results/
 playwright-report/
-
-# AI modified: keep local design sources and exports out of the repository.
-design
-.vitest/

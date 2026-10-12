@@ -1,9 +1,0 @@
-{
-  "recommendations": [
-    "Vue.volar",
-    "vitest.explorer",
-    "ms-playwright.playwright",
-    "EditorConfig.EditorConfig",
-    "VoidZero.vite-plus-extension-pack"
-  ]
-}

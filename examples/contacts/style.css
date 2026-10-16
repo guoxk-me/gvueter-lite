@@ -1,0 +1,4 @@
+/* AI modified: example-only utility scanning never changes the production stylesheet entry. */
+@import '../../src/styles/main.css';
+@source './**/*.vue';
+@source './**/*.ts';

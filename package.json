@@ -1,0 +1,68 @@
+{
+  "name": "gvueter-lite",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
+    "type-check": "vue-tsc -b",
+    "lint": "vp lint",
+    "lint:fix": "vp lint --fix",
+    "format:check": "vp fmt --check",
+    "format": "vp fmt",
+    "check:boundaries": "depcruise --config dependency-cruiser.config.mjs src examples",
+    "test": "vp test run",
+    "test:watch": "vp test",
+    "test:e2e": "playwright test",
+    "verify": "vp run type-check && vp run lint && vp run format:check && vp run check:boundaries",
+    "verify:all": "vp run verify && vp run test && vp run build && vp run check:production && vp run test:e2e",
+    "dev:examples": "vp dev --mode examples",
+    "check:production": "node scripts/check-production.mjs"
+  },
+  "dependencies": {
+    "@lucide/vue": "catalog:",
+    "@tanstack/vue-form": "catalog:",
+    "@tanstack/vue-query": "catalog:",
+    "@tanstack/vue-table": "catalog:",
+    "@vueuse/core": "catalog:",
+    "axios": "catalog:",
+    "class-variance-authority": "catalog:",
+    "cn": "catalog:",
+    "reka-ui": "catalog:",
+    "vue": "catalog:",
+    "vue-sonner": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "@types/node": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vue/test-utils": "catalog:",
+    "@vue/tsconfig": "catalog:",
+    "dependency-cruiser": "catalog:",
+    "happy-dom": "catalog:",
+    "msw": "catalog:",
+    "tailwindcss": "catalog:",
+    "tw-animate-css": "catalog:",
+    "typescript": "catalog:",
+    "unplugin-auto-import": "catalog:",
+    "unplugin-vue-components": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vue-tsc": "catalog:"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.11.2",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": ">=24.22.0 <25"
+  },
+  "packageManager": "pnpm@12.11.2"
+}

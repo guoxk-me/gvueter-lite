@@ -13,6 +13,7 @@
 | DataTable、列、选择、查询协调和 URL 同步 | [表格契约](contracts/data-table.md) |
 | 会话、账号、权限、跨窗口身份与退出 | [身份与权限契约](contracts/identity.md) |
 | HTTP、Query、错误、写入未知结果与接口同步 | [请求与数据契约](contracts/http-query.md) |
+| HTTP 客户端设计、模板对照、接入与验收 | [HTTP 客户端设计](contracts/http-client-redesign.md) |
 | 路由、导航、标签、缓存、显示配置 | [应用外壳契约](contracts/application-shell.md) |
 | 前后端目录、依赖、配置、日志和工程边界 | [工程架构契约](contracts/architecture.md) |
 | 为什么这样选、旧方案、研究与历史验收 | [决策索引](decisions/README.md) |

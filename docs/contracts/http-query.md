@@ -4,6 +4,8 @@
 
 ## 1. HTTP 与接口来源
 
+2026-10-16 按用户认可的 [HTTP 客户端设计](http-client-redesign.md) 实施原生 Axios 实例／拦截器、方法入口、Axios 原生参数序列化、JSON 校验、特殊响应和错误改造。timeout 与拦截器恢复保留 Axios 原生语义；身份协议与可信发送证据继续留待正式接入，不宣称本轮已验收。
+
 使用 Axios，集中基础地址、凭据、超时、成功解包与传输错误处理，不另造通用资源框架。默认同源 /api，本地 Vite 代理；认证、跳转与账号清理由上层 auth／router 协调，http 不反向引用 pages／router。
 
 成功 JSON 用 data 包裹并默认解包，分页内容使用 records／total。下载、无正文或其他特殊响应显式选择对应处理，不能一律当 JSON data。错误使用稳定 code、可展示 message、可选字段错误和 requestId；完整字段路径与错误码表仍待定义。失败使用正确 HTTP 状态，不统一返回 200；需要响应头等信息时提供显式原始响应入口。

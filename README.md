@@ -50,6 +50,8 @@ vp run verify:all           # 快检、测试、构建、产物隔离、开发/�
 
 完整契约见 [PRD](docs/prd.md)，基础工程记录见 [Phase 1](docs/contracts/frontend-foundation.md)，核心组件接入与验收记录见 [Phase 2](docs/contracts/frontend-phase-2.md)。
 
+HTTP 使用原生 Axios 实例与拦截器，提供 `get/post/put/patch/delete`、schema 校验、`requestEmpty`、`requestRaw`、`requestWithResponse` 和文件下载。Axios 原生参数序列化默认将数组编码为重复参数名；JSON 请求错误统一为对象式 `ApiError`。调用示例、拦截器顺序与原生恢复语义见 [HTTP 客户端设计](docs/contracts/http-client-redesign.md)。
+
 本机已有 Chrome 时可运行 `PLAYWRIGHT_CHANNEL=chrome vp run verify:all`，使用隔离测试上下文验收；默认仍使用 Playwright 管理的 Chromium。老版本 pnpm 自管理切换失败时，直接使用 `vp run <脚本>` 与 `vp exec <工具>`，由 Vite Plus 选择项目声明的包管理器。
 
 组件源码来自 shadcn-vue CLI 2.8.2 的 reka-nova 样式，不代表最终设计定稿。全局样式使用系统字体，避免外部字体请求。Phase 2 所需的状态 variants 已从该版本的 CSS 收录到全局样式，未把整个 CLI 加为运行依赖。以后新增组件时按生成结果审查实际 CSS 与包依赖。
@@ -63,3 +65,7 @@ vp run verify:all           # 快检、测试、构建、产物隔离、开发/�
 新资源接入可参考 `examples/contacts/ContactsExample.vue` 的字段、列和容器组合，以及 `api.ts` 的查询工厂、DTO 和核实函数。公开类型从 `src/components/form` 与 `src/components/table` 导出。
 
 Executed（2026-10-16）：`PLAYWRIGHT_CHANNEL=chrome vp run verify:all` 通过，包含 39 项测试、12 项浏览器测试、生产构建和产物隔离；独立目录冻结锁文件安装及类型检查通过。详细证据与未验证范围见 Phase 2 文档。
+
+HTTP 重构初次验收（2026-10-16）：同一完整命令通过，当时为 52 项测试与 14 项浏览器测试；新增真实 HTTP 文件／进度／取消场景，隔离目录冻结锁文件离线安装通过。此前加入的 qs、@types/qs 已按后续决定移除，参数编码使用 Axios 原生能力；认证和真实后端验收继续按契约推进。
+
+提交前复验 Executed（2026-10-19）：移除 qs 后 `PLAYWRIGHT_CHANNEL=chrome vp run verify:all` 全部通过，当前为 53 项测试、14 项浏览器测试，含类型／Lint／格式、依赖边界、生产构建与示例隔离。

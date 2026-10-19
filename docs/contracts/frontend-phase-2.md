@@ -2,6 +2,8 @@
 
 日期：2026-10-16。状态：本方案规定的 Phase 2 已实施并完成本地验收；实际记录见第 8 节。后续首版能力及真实联调不计为完成。返回 [PRD](../prd.md)。承接 [Q226](../decisions/226-frontend-delivery-order.md) 与 [Phase 1](frontend-foundation.md)。
 
+后续 HTTP 封装已按用户认可的 [客户端设计](http-client-redesign.md) 迁移到原生 Axios 拦截器与方法入口；该设计记录新增能力和 HTTP 重构／移除 qs 后的验收。本文件第 8 节保留 Phase 2 最初验收证据。
+
 ## 1. 目标与边界
 
 固定联系人示例通过 MSW HTTP Mock 跑通搜索、分页、新增／编辑、校验、保存刷新、明确失败和未知写入；公共组件不依赖联系人 API。

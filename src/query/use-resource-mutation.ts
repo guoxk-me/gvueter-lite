@@ -1,6 +1,7 @@
 import { computed, shallowRef, watch } from 'vue';
 import { onlineManager, useMutation } from '@tanstack/vue-query';
-import { ApiError, isDefiniteRejection } from '@/http/api-error';
+import { ApiError } from '@/http';
+import { isDefiniteRejection } from './error-policy';
 import { useQueryRuntime } from './runtime';
 import type { OperationScope, PendingOperation } from './operation-registry';
 
@@ -79,7 +80,7 @@ export function useResourceMutation<TInput, TSaved>(
       mutationFn: async (input: TInput): Promise<TSaved> => {
         const identity = runtime.identity.value;
         if (!identity || !onlineManager.isOnline())
-          throw new ApiError('当前无法发送，请检查身份和网络。', 'not-executed');
+          throw new ApiError({ message: '当前无法发送，请检查身份和网络。', kind: 'not-executed' });
         const operation: PendingOperation = {
           ...options.scope(input),
           operationId: crypto.randomUUID(),
@@ -88,27 +89,30 @@ export function useResourceMutation<TInput, TSaved>(
           verificationAttempted: false,
         };
         if (!runtime.operations.add(operation))
-          throw new ApiError('先前操作结果待确认，请先核实。', 'not-executed');
+          throw new ApiError({ message: '先前操作结果待确认，请先核实。', kind: 'not-executed' });
         const generation = runtime.generation.value;
         try {
           const saved = await options.write(input, operation.operationId);
           if (generation !== runtime.generation.value)
-            throw new ApiError('操作所属身份已失效。', 'not-executed');
+            throw new ApiError({ message: '操作所属身份已失效。', kind: 'not-executed' });
           runtime.operations.remove(operation.operationId);
           await confirmed(saved, generation);
           if (generation !== runtime.generation.value)
-            throw new ApiError('操作所属身份已失效。', 'not-executed');
+            throw new ApiError({ message: '操作所属身份已失效。', kind: 'not-executed' });
           return saved;
         } catch (error) {
           if (generation !== runtime.generation.value)
-            throw new ApiError('操作所属身份已失效。', 'not-executed');
+            throw new ApiError({ message: '操作所属身份已失效。', kind: 'not-executed' });
           if (isDefiniteRejection(error)) {
             runtime.operations.remove(operation.operationId);
             throw error;
           }
           // AI modified: transport loss cannot release conflict protection or replay a write.
           runtime.operations.update(operation.operationId, { status: 'unknown' });
-          throw new ApiError('保存结果待确认。可以关闭窗口，请先核实后再进行相关操作。', 'unknown');
+          throw new ApiError({
+            message: '保存结果待确认。可以关闭窗口，请先核实后再进行相关操作。',
+            kind: 'unknown',
+          });
         }
       },
     },

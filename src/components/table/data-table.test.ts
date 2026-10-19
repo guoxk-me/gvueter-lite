@@ -105,7 +105,7 @@ test('refresh failure keeps legal selection and successful refresh intersects cu
   await settled();
   await wrapper.get('[aria-label="选择 1"]').trigger('click');
   expect(handle.selectedIds).toEqual(['1']);
-  read.mockRejectedValueOnce(new ApiError('rejected', 'http', 400));
+  read.mockRejectedValueOnce(new ApiError({ message: 'rejected', kind: 'http', status: 400 }));
   expect(await handle.refresh()).toEqual({ status: 'failed' });
   expect(handle.selectedIds).toEqual(['1']);
   expect(wrapper.text()).toContain('first');

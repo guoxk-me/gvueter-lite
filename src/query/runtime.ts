@@ -1,6 +1,7 @@
 import { inject, shallowRef, watch, type InjectionKey, type Ref } from 'vue';
 import { QueryCache, QueryClient } from '@tanstack/vue-query';
-import { ApiError, canRetryRead } from '@/http/api-error';
+import { ApiError } from '@/http';
+import { canRetryRead } from './error-policy';
 import { createOperationRegistry } from './operation-registry';
 
 export interface QueryIdentity {

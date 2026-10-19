@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { type QueryClient } from '@tanstack/vue-query';
-import { createHttpClient } from '@/http/client';
+import { createHttpClient } from '@/http';
 import type { TableQuery, TableRequest } from '@/components/table';
 import {
   contactPageSchema,
@@ -13,7 +13,8 @@ import {
   type ContactSearch,
   type Scenario,
 } from './contracts';
-const http = createHttpClient('/_examples/api');
+// AI modified: the example owns its client; credentials and business schemas are explicit.
+const http = createHttpClient({ baseURL: '/_examples/api', withCredentials: true });
 export const contactKeys = {
   lists: (identity: string) => [identity, 'contacts', 'list'] as const,
   detail: (identity: string, id: string) => [identity, 'contacts', 'detail', id] as const,
@@ -25,20 +26,17 @@ export function contactListQuery(
   return {
     queryKey: [...contactKeys.lists(identity), request],
     queryFn: ({ signal }: { signal: AbortSignal }) =>
-      http.request(
-        {
-          url: '/contacts',
-          signal,
-          params: {
-            ...request.search,
-            page: request.page,
-            pageSize: request.pageSize,
-            sortBy: request.sort?.field,
-            sortOrder: request.sort?.direction,
-          },
+      http.get('/contacts', {
+        signal,
+        params: {
+          ...request.search,
+          page: request.page,
+          pageSize: request.pageSize,
+          sortBy: request.sort?.field,
+          sortOrder: request.sort?.direction,
         },
-        contactPageSchema,
-      ),
+        schema: contactPageSchema,
+      }),
   } satisfies TableQuery<Contact>;
 }
 export async function loadContact(
@@ -50,7 +48,7 @@ export async function loadContact(
   const contact = await client.fetchQuery({
     queryKey: contactKeys.detail(identity, context.id),
     queryFn: ({ signal }) =>
-      http.request({ url: `/contacts/${encodeURIComponent(context.id)}`, signal }, contactSchema),
+      http.get(`/contacts/${encodeURIComponent(context.id)}`, { signal, schema: contactSchema }),
   });
   return { name: contact.name, email: contact.email, enabled: contact.enabled };
 }
@@ -58,42 +56,34 @@ export function saveContact(
   input: { values: ContactFormValues; context: ContactContext },
   operationId: string,
 ) {
-  return http.request(
+  const save = input.context.mode === 'create' ? http.post : http.patch;
+  return save(
+    input.context.mode === 'create'
+      ? '/contacts'
+      : `/contacts/${encodeURIComponent(input.context.id)}`,
+    // AI modified: the resource constructs its DTO instead of forwarding arbitrary editor fields.
+    { name: input.values.name, email: input.values.email, enabled: input.values.enabled },
     {
-      method: input.context.mode === 'create' ? 'POST' : 'PATCH',
-      url:
-        input.context.mode === 'create'
-          ? '/contacts'
-          : `/contacts/${encodeURIComponent(input.context.id)}`,
       headers: { 'X-Example-Operation-Id': operationId },
-      // AI modified: the resource owns its DTO and never forwards arbitrary editor fields.
-      data: { name: input.values.name, email: input.values.email, enabled: input.values.enabled },
+      schema: contactSchema,
     },
-    contactSchema,
   );
 }
 export function verifyContact(operationId: string) {
-  return http.request(
-    { url: `/operations/${encodeURIComponent(operationId)}` },
-    verificationSchema,
-  );
+  return http.get(`/operations/${encodeURIComponent(operationId)}`, { schema: verificationSchema });
 }
 const acknowledgement = z.object({ ok: z.boolean() });
 export function setScenario(scenario: Scenario) {
-  return http.request(
-    {
-      method: 'POST',
-      url: '/scenario',
-      data: JSON.stringify(scenario),
-      headers: { 'Content-Type': 'application/json' },
-    },
-    acknowledgement,
-  );
+  // AI modified: this endpoint accepts a JSON scalar, not Axios's default text/form body.
+  return http.post('/scenario', scenario, {
+    schema: acknowledgement,
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
 export function resetExample() {
-  return http.request({ method: 'POST', url: '/reset' }, acknowledgement);
+  return http.post('/reset', undefined, { schema: acknowledgement });
 }
 
 export function readScenario() {
-  return http.request({ url: '/scenario' }, scenarioSchema);
+  return http.get('/scenario', { schema: scenarioSchema });
 }

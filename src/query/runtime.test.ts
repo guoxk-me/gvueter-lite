@@ -13,7 +13,9 @@ test('two observers share one terminal error and exactly one retry', async () =>
   runtime.client.setDefaultOptions({
     queries: { ...runtime.client.getDefaultOptions().queries, retryDelay: 0 },
   });
-  const read = vi.fn().mockRejectedValue(new ApiError('读取失败', 'http', 503));
+  const read = vi
+    .fn()
+    .mockRejectedValue(new ApiError({ message: '读取失败', kind: 'http', status: 503 }));
   const first = new QueryObserver(runtime.client, { queryKey: ['a1', 'records'], queryFn: read });
   const second = new QueryObserver(runtime.client, { queryKey: ['a1', 'records'], queryFn: read });
   const unsubscribe1 = first.subscribe(() => undefined),
@@ -32,7 +34,7 @@ test('old identity and inactive observers never notify the new page', async () =
   await expect(
     runtime.client.fetchQuery({
       queryKey: ['a1', 'detail'],
-      queryFn: () => Promise.reject(new ApiError('bad', 'http', 403)),
+      queryFn: () => Promise.reject(new ApiError({ message: 'bad', kind: 'http', status: 403 })),
     }),
   ).rejects.toThrow('bad');
   expect(notify).not.toHaveBeenCalled();

@@ -63,9 +63,15 @@ test('failed save retains draft and only clears the edited server field error', 
     initialValues: { name: 'old', enabled: true },
     fields,
     submit: async () => {
-      throw new ApiError('bad', 'http', 422, 'INVALID', {
-        name: '名称冲突',
-        enabled: '状态不允许',
+      throw new ApiError({
+        message: 'bad',
+        kind: 'http',
+        status: 422,
+        code: 'INVALID',
+        fieldErrors: {
+          name: '名称冲突',
+          enabled: '状态不允许',
+        },
       });
     },
   });
@@ -111,7 +117,7 @@ test('submission locks input and rejects duplicates; reset requires confirmation
 });
 test('accepted reset restores the snapshot; unknown outcome cannot be replayed in the same editor', async () => {
   const save = vi.fn(async () => {
-    throw new ApiError('结果待确认', 'unknown');
+    throw new ApiError({ message: '结果待确认', kind: 'unknown' });
   });
   const wrapper = form({ initialValues: { name: 'old', enabled: true }, fields, submit: save });
   const handle = wrapper.vm as unknown as FormHandle;

@@ -11,7 +11,7 @@ export default defineConfig({
   projects: [
     {
       name: 'examples',
-      testMatch: 'contacts.spec.ts',
+      testMatch: ['contacts.spec.ts', 'http.spec.ts'],
       use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:4175' },
     },
     {

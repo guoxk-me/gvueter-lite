@@ -171,7 +171,9 @@ async function submit(): Promise<SubmitOutcome<R>> {
   } catch (error) {
     if (!alive || run !== revision) return { status: 'not-executed' };
     const failure =
-      error instanceof ApiError ? error : new ApiError('保存失败，请重试。', 'contract');
+      error instanceof ApiError
+        ? error
+        : new ApiError({ message: '保存失败，请重试。', kind: 'contract' });
     const fieldErrors: Record<string, string> = {};
     const unlocated: string[] = [];
     for (const [name, text] of Object.entries(failure.fieldErrors)) {

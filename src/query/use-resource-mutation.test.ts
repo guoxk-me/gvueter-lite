@@ -60,7 +60,7 @@ afterEach(() => {
 test('unknown write survives editor lifetime, verifies once, and blocks only its target', async () => {
   const testCase = fixture({
     write: async () => {
-      throw new ApiError('lost', 'network');
+      throw new ApiError({ message: 'lost', kind: 'network' });
     },
   });
   await expect(testCase.mutation.mutateAsync('1')).rejects.toMatchObject({ kind: 'unknown' });
@@ -92,7 +92,7 @@ test('offline commands are not queued; explicit rejection releases protection', 
   testCase.dispose();
   const rejected = fixture({
     write: async () => {
-      throw new ApiError('invalid', 'http', 422, 'INVALID');
+      throw new ApiError({ message: 'invalid', kind: 'http', status: 422, code: 'INVALID' });
     },
   });
   await expect(rejected.mutation.mutateAsync('1')).rejects.toMatchObject({ status: 422 });
@@ -120,7 +120,7 @@ test('late success after identity change cannot update resources or release anot
 test('refresh restores protection before writing and never repeats an attempted automatic check', async () => {
   const first = fixture({
     write: async () => {
-      throw new ApiError('lost', 'timeout');
+      throw new ApiError({ message: 'lost', kind: 'timeout' });
     },
   });
   await expect(first.mutation.mutateAsync('1')).rejects.toMatchObject({ kind: 'unknown' });
@@ -147,7 +147,7 @@ test('identity must be ready and late verification cannot confirm into a new ide
   let finish!: (verification: Verification<string>) => void;
   const testCase = fixture({
     write: async () => {
-      throw new ApiError('lost', 'network');
+      throw new ApiError({ message: 'lost', kind: 'network' });
     },
     verify: () =>
       new Promise((resolve) => {
